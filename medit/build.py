@@ -10,7 +10,7 @@ from medit.schedule import order_for_cycle
 from medit.typography import smarten
 
 ROOT = Path(__file__).resolve().parent.parent
-START = date(2026, 11, 10)
+START = date(2026, 11, 9)
 HORIZON_DAYS = 3653
 
 

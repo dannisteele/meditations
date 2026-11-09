@@ -9,7 +9,7 @@ from medit.notify import make_notification
 from medit.parse import load_passages
 from medit.schedule import passage_id_for
 
-START = date(2026, 11, 10)
+START = date(2026, 11, 9)
 KEYS = {"date", "book", "section", "ref", "modern", "original", "notification", "notification_original"}
 
 
@@ -35,7 +35,7 @@ class BuildTest(unittest.TestCase):
         self.assertEqual(self.count, 1000)
         names = sorted(p.name for p in (self.out / "days").glob("*.json"))
         self.assertEqual(len(names), 1000)
-        self.assertEqual(names[0], "2026-11-10.json")
+        self.assertEqual(names[0], "2026-11-09.json")
         self.assertEqual(names[-1], f"{(START + timedelta(days=999)).isoformat()}.json")
 
     def test_shape(self):
@@ -63,7 +63,7 @@ class BuildTest(unittest.TestCase):
                 self.assertNotIn("'", d[key], (k, key))
 
     def test_utf8_not_escaped(self):
-        raw = (self.out / "days" / "2026-11-10.json").read_text(encoding="utf-8")
+        raw = (self.out / "days" / "2026-11-09.json").read_text(encoding="utf-8")
         self.assertIn("§", raw)
         self.assertNotIn("\\u00a7", raw)
 
