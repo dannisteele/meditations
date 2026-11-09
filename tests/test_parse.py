@@ -37,9 +37,37 @@ class ParseLongTest(unittest.TestCase):
     def test_paragraphs_unwrapped(self):
         for p in self.ps:
             for para in p["original"].split("\n\n"):
-                self.assertNotIn("\n", para, p["id"])
-                self.assertEqual(para, para.strip(), p["id"])
                 self.assertTrue(para, p["id"])
+                for line in para.split("\n"):  # single newlines only inside verse
+                    self.assertEqual(line, line.strip(), p["id"])
+                    self.assertTrue(line, p["id"])
+
+    def test_prose_paragraphs_have_no_line_breaks(self):
+        self.assertNotIn("\n", self.by_id["2.1"]["original"])
+        self.assertNotIn("\n", self.by_id["4.3"]["original"].replace("\n\n", ""))
+
+    def test_verse_quotations_in_main_text_kept(self):
+        self.assertIn("Me and my children if the gods neglect,\nThis has its reason too.\"",
+                      self.by_id["11.6"]["original"])
+        self.assertIn("We must not chafe and fret at that which happens.", self.by_id["11.6"]["original"])
+        self.assertIn("Never has wronged a man in deed or word.", self.by_id["5.31"]["original"])
+        self.assertIn("Up to Olympus from the wide-spread earth.", self.by_id["5.33"]["original"])
+        self.assertIn("Turning the channel's course", self.by_id["7.51"]["original"])
+        self.assertIn("Leaves, some the wind scatters", self.by_id["10.34"]["original"])
+
+    def test_verse_quoted_in_footnotes_dropped(self):
+        for p in self.ps:
+            for s in ("Si quaeras Helicen", "Reddenda terrae", "For there in sooth", "Sphairos",
+                      "From the Bellerophon", "See Aristophanes", "From the Apologia"):
+                self.assertNotIn(s, p["original"], p["id"])
+
+    def test_no_cross_references(self):
+        for p in self.ps:
+            self.assertIsNone(re.search(r"\((?:[ivx]+\.|Epictetus)", p["original"]), p["id"])
+
+    def test_no_illustration_captions(self):
+        for p in self.ps:
+            self.assertNotIn("Illustration", p["original"], p["id"])
 
     def test_no_footnote_text(self):
         for p in self.ps:
@@ -57,6 +85,7 @@ class ParseLongTest(unittest.TestCase):
     def test_double_hyphen_becomes_em_dash(self):
         for p in self.ps:
             self.assertNotIn("--", p["original"], p["id"])
+            self.assertNotIn("\u2014-", p["original"], p["id"])
         self.assertIn("warm?\u2014But this is more pleasant.\u2014", self.by_id["5.1"]["original"])
 
     def test_total_reasonable(self):
