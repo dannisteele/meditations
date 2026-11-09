@@ -43,6 +43,16 @@ class ModernTest(unittest.TestCase):
             self.assertIsNone(re.search(r"\((?:[ivx]+\.|Epictetus)", t), i)
             self.assertNotIn("Illustration", t, i)
 
+    def test_no_added_attributions(self):
+        for i, t in self.m.items():
+            for s in ("Hesiod", "Homer, Odyssey"):
+                self.assertNotIn(s, t, i)
+
+    def test_no_dangling_comma(self):
+        for i, t in self.m.items():
+            for para in t.split("\n\n"):
+                self.assertFalse(para.endswith(","), i)
+
     def test_length_sane(self):
         for i, t in self.m.items():
             r = len(t) / len(self.ps[i]["original"])

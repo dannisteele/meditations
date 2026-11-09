@@ -68,5 +68,18 @@ class BuildTest(unittest.TestCase):
         self.assertNotIn("\\u00a7", raw)
 
 
+class CommittedSiteTest(unittest.TestCase):
+    def test_committed_day_files_match_a_fresh_build(self):
+        from medit.build import HORIZON_DAYS, ROOT
+        committed = ROOT / "site" / "days"
+        with tempfile.TemporaryDirectory() as tmp:
+            build(Path(tmp), START, HORIZON_DAYS)
+            fresh = sorted(p.name for p in (Path(tmp) / "days").glob("*.json"))
+            self.assertEqual(sorted(p.name for p in committed.glob("*.json")), fresh)
+            for name in fresh:
+                self.assertEqual((committed / name).read_bytes(),
+                                 (Path(tmp) / "days" / name).read_bytes(), name)
+
+
 if __name__ == "__main__":
     unittest.main()

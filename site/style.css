@@ -48,7 +48,7 @@ header { text-align: center; margin-bottom: 2rem; }
 }
 .date { margin: 0.25rem 0 0; color: var(--muted); font-style: italic; font-size: 1rem; }
 article { flex: 1; }
-.text p { margin: 0 0 1em; hyphens: auto; -webkit-hyphens: auto; }
+.text p { margin: 0 0 1em; hyphens: auto; -webkit-hyphens: auto; white-space: pre-line; }
 .text p:first-child::first-letter {
   float: left;
   font-size: 3.4em;

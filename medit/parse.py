@@ -31,6 +31,7 @@ def _clean(text: str) -> str:
 
 
 VERSE = "\x00"  # marks an indented line of quoted verse in the main text
+CITATION = re.compile(r"^(?:[A-Z]{3,}\b|_[A-Z]\w+_,)")  # e.g. "HESIOD, Works…", "_Odyssey_, ix. 413."
 NOTE_START = re.compile(r"^ *\[[A-Z]\] ")
 CROSS_REF = re.compile(r"\s*\((?:see\s+)?(?:[ivx]+\.\s*(?:c\.\s*)?\d|Epictetus)[^()]*\)")
 
@@ -46,7 +47,7 @@ def _strip_notes(lines: list[str]) -> list[str]:
         elif not line.startswith(" "):
             in_note = False
             kept.append(line)
-        elif not in_note:
+        elif not in_note and not CITATION.match(line.strip()):
             kept.append(VERSE + line.strip())
     return kept
 
@@ -63,6 +64,7 @@ def _paragraphs(lines: list[str]) -> str:
             paras.append(text)
             cur = []
     cleaned = ["\n".join(_clean(l) for l in p.split("\n")) for p in paras]
+    cleaned = [p[:-1] + "." if p.endswith(",") else p for p in cleaned]  # ref removed at end
     return "\n\n".join(p for p in cleaned if p.strip())
 
 

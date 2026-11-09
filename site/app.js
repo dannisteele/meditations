@@ -6,7 +6,11 @@
   function todayLondon() {
     var q = new URLSearchParams(location.search).get("date");
     if (q && /^\d{4}-\d{2}-\d{2}$/.test(q)) return q;
-    return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/London" }).format(new Date());
+    var parts = {};
+    new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/London", year: "numeric", month: "2-digit", day: "2-digit" })
+      .formatToParts(new Date())
+      .forEach(function (p) { parts[p.type] = p.value; });
+    return parts.year + "-" + parts.month + "-" + parts.day;
   }
 
   function getVersion() {
@@ -48,18 +52,33 @@
     document.querySelector(".toggle").hidden = true;
   }
 
-  var date = todayLondon();
-  document.getElementById("date").textContent = prettyDate(date);
   document.querySelectorAll(".toggle button").forEach(function (b) {
     b.addEventListener("click", function () { setVersion(b.dataset.version); render(); });
   });
 
-  fetch("days/" + date + ".json", { cache: "no-cache" })
-    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
-    .then(function (d) {
-      dayData = d;
-      document.getElementById("ref").textContent = d.ref;
-      render();
-    })
-    .catch(showMissing);
+  var shownDate = null;
+
+  function load() {
+    var date = todayLondon();
+    if (date === shownDate) return;
+    shownDate = date;
+    dayData = null;
+    document.getElementById("date").textContent = prettyDate(date);
+    document.getElementById("ref").textContent = "";
+    document.querySelector(".toggle").hidden = false;
+    fetch("days/" + date + ".json", { cache: "no-cache" })
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (d) {
+        if (date !== shownDate) return;
+        dayData = d;
+        document.getElementById("ref").textContent = d.ref;
+        render();
+      })
+      .catch(function () { if (date === shownDate) showMissing(); });
+  }
+
+  // iOS keeps home-screen apps and tabs suspended: re-check the date on return.
+  document.addEventListener("visibilitychange", function () { if (!document.hidden) load(); });
+  window.addEventListener("pageshow", load);
+  load();
 })();

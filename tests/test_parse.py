@@ -65,6 +65,17 @@ class ParseLongTest(unittest.TestCase):
         for p in self.ps:
             self.assertIsNone(re.search(r"\((?:[ivx]+\.|Epictetus)", p["original"]), p["id"])
 
+    def test_no_source_citation_lines(self):
+        for p in self.ps:
+            for s in ("HESIOD", "Odyssey, ix."):
+                self.assertNotIn(s, p["original"], p["id"])
+        self.assertEqual(self.by_id["11.31"]["original"], "And my heart laughed within.")
+
+    def test_no_dangling_comma_after_removed_reference(self):
+        for p in self.ps:
+            for para in p["original"].split("\n\n"):
+                self.assertFalse(para.endswith(","), p["id"])
+
     def test_no_illustration_captions(self):
         for p in self.ps:
             self.assertNotIn("Illustration", p["original"], p["id"])
