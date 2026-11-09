@@ -54,6 +54,11 @@ class ParseLongTest(unittest.TestCase):
     def test_last_passage_ends_cleanly(self):
         self.assertTrue(self.ps[-1]["original"].endswith("he also who releases thee is satisfied."))
 
+    def test_double_hyphen_becomes_em_dash(self):
+        for p in self.ps:
+            self.assertNotIn("--", p["original"], p["id"])
+        self.assertIn("warm?\u2014But this is more pleasant.\u2014", self.by_id["5.1"]["original"])
+
     def test_total_reasonable(self):
         self.assertTrue(450 <= len(self.ps) <= 520, len(self.ps))
 

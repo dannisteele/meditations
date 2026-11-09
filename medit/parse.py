@@ -21,6 +21,7 @@ def _clean(text: str) -> str:
     text = re.sub(r"\[\s+", "[", text)
     text = re.sub(r"\s+\]", "]", text)
     text = re.sub(r"\(\s*\)", "", text)
+    text = re.sub(r"\s*--\s*", "—", text)           # Gutenberg dashes
     text = re.sub(r"[ \t]+", " ", text)
     text = re.sub(r" ([,;:.?!])", r"\1", text)
     return text.strip()
