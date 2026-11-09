@@ -1,0 +1,92 @@
+:root {
+  --bg: #f6f1e8;
+  --ink: #2b2620;
+  --muted: #7a6f62;
+  --accent: #9a7b45;
+  --rule: #e2d8c6;
+  --chip: #ece4d5;
+  --chip-on: #2b2620;
+  --chip-on-ink: #f6f1e8;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1c1a17;
+    --ink: #ece4d5;
+    --muted: #a39887;
+    --accent: #c9a96e;
+    --rule: #34302a;
+    --chip: #2a2723;
+    --chip-on: #ece4d5;
+    --chip-on-ink: #1c1a17;
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "EB Garamond", Georgia, "Times New Roman", serif;
+  font-size: 1.2rem;
+  line-height: 1.6;
+}
+main {
+  max-width: 36rem;
+  margin: 0 auto;
+  padding: max(2.5rem, env(safe-area-inset-top)) 16px max(2rem, env(safe-area-inset-bottom));
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+header { text-align: center; margin-bottom: 2rem; }
+.kicker {
+  margin: 0;
+  font-size: 0.8rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.date { margin: 0.25rem 0 0; color: var(--muted); font-style: italic; font-size: 1rem; }
+article { flex: 1; }
+.text p { margin: 0 0 1em; hyphens: auto; -webkit-hyphens: auto; }
+.text p:first-child::first-letter {
+  float: left;
+  font-size: 3.4em;
+  line-height: 0.85;
+  padding: 0.06em 0.08em 0 0;
+  color: var(--accent);
+}
+.text.message { text-align: center; color: var(--muted); font-style: italic; }
+.text.message p::first-letter { all: unset; }
+.ref {
+  text-align: right;
+  color: var(--muted);
+  font-style: italic;
+  margin: 1.25rem 0 0;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--rule);
+}
+.ref:empty { display: none; }
+.toggle {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin: 2.5rem auto 1.5rem;
+  padding: 4px;
+  background: var(--chip);
+  border-radius: 999px;
+  width: max-content;
+}
+.toggle button {
+  font: inherit;
+  font-size: 0.95rem;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  padding: 0.35rem 1.1rem;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.toggle button[aria-pressed="true"] { background: var(--chip-on); color: var(--chip-on-ink); }
+.toggle[hidden] { display: none; }
+footer { text-align: center; font-size: 0.8rem; color: var(--muted); }

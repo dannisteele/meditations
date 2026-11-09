@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Meditations</title>
+<meta name="description" content="A passage from Marcus Aurelius, every day.">
+<meta name="apple-mobile-web-app-title" content="Meditations">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#f6f1e8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1c1a17" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <header>
+    <p class="kicker">Meditations</p>
+    <p class="date" id="date"></p>
+  </header>
+  <article id="passage" aria-live="polite">
+    <div id="text" class="text"></div>
+    <p class="ref" id="ref"></p>
+  </article>
+  <div class="toggle" role="group" aria-label="Text version">
+    <button type="button" data-version="modern" aria-pressed="true">Modern</button>
+    <button type="button" data-version="original" aria-pressed="false">Original</button>
+  </div>
+  <footer>Marcus Aurelius · George Long's translation (1862)</footer>
+</main>
+<script src="app.js"></script>
+</body>
+</html>
