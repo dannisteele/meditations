@@ -8,6 +8,7 @@ ROOT = Path(__file__).resolve().parent.parent
 SOURCE = ROOT / "source" / "long.txt"
 PASSAGES = ROOT / "data" / "passages.json"
 MODERN_DIR = ROOT / "data" / "modern"
+EXPLAINED_DIR = ROOT / "data" / "explained"
 
 ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"]
 SECTION_RE = re.compile(r"^(\d+)\. (.*)$")
@@ -105,6 +106,13 @@ def load_passages(path: Path = PASSAGES) -> list[dict]:
 
 def load_modern(directory: Path = MODERN_DIR) -> dict[str, str]:
     out: dict[str, str] = {}
+    for f in sorted(Path(directory).glob("book-*.json")):
+        out.update(json.loads(f.read_text(encoding="utf-8")))
+    return out
+
+
+def load_explained(directory: Path = EXPLAINED_DIR) -> dict[str, dict]:
+    out: dict[str, dict] = {}
     for f in sorted(Path(directory).glob("book-*.json")):
         out.update(json.loads(f.read_text(encoding="utf-8")))
     return out

@@ -56,6 +56,15 @@ article { flex: 1; }
   padding: 0.06em 0.08em 0 0;
   color: var(--accent);
 }
+.text.explained p:first-child::first-letter { all: unset; }
+.text .label {
+  margin: 1.75em 0 0.4em;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.text .label::first-letter { all: unset; }
 .text.message { text-align: center; color: var(--muted); font-style: italic; }
 .text.message p::first-letter { all: unset; }
 .ref {

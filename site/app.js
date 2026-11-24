@@ -14,7 +14,10 @@
   }
 
   function getVersion() {
-    try { return localStorage.getItem(KEY) === "original" ? "original" : "modern"; }
+    try {
+      var v = localStorage.getItem(KEY);
+      return v === "original" || v === "explained" ? v : "modern";
+    }
     catch (e) { return "modern"; }
   }
 
@@ -28,10 +31,7 @@
     return d.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
   }
 
-  function renderText(text, isMessage) {
-    var el = document.getElementById("text");
-    el.className = isMessage ? "text message" : "text";
-    el.textContent = "";
+  function addParas(el, text) {
     text.split("\n\n").forEach(function (para) {
       var p = document.createElement("p");
       p.textContent = para;
@@ -39,12 +39,35 @@
     });
   }
 
+  function renderText(text, isMessage) {
+    var el = document.getElementById("text");
+    el.className = isMessage ? "text message" : "text";
+    el.textContent = "";
+    addParas(el, text);
+  }
+
+  function renderExplained(x) {
+    var el = document.getElementById("text");
+    el.className = "text explained";
+    el.textContent = "";
+    addParas(el, x.summary);
+    if (x.today) {
+      var h = document.createElement("p");
+      h.className = "label";
+      h.textContent = "In everyday life";
+      el.appendChild(h);
+      addParas(el, x.today);
+    }
+  }
+
   function render() {
     var v = getVersion();
     document.querySelectorAll(".toggle button").forEach(function (b) {
       b.setAttribute("aria-pressed", String(b.dataset.version === v));
     });
-    if (dayData) renderText(dayData[v], false);
+    if (!dayData) return;
+    if (v === "explained" && dayData.explained) renderExplained(dayData.explained);
+    else renderText(dayData[v === "explained" ? "modern" : v], false);
   }
 
   function showMissing() {

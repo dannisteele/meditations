@@ -10,7 +10,7 @@ from medit.parse import load_passages
 from medit.schedule import passage_id_for
 
 START = date(2026, 11, 9)
-KEYS = {"date", "book", "section", "ref", "modern", "original", "notification", "notification_original"}
+KEYS = {"date", "book", "section", "ref", "modern", "original", "notification", "notification_original", "explained"}
 
 
 class BuildTest(unittest.TestCase):
@@ -45,6 +45,8 @@ class BuildTest(unittest.TestCase):
         self.assertEqual(d["notification"], make_notification(d["modern"]))
         self.assertEqual(d["notification_original"], make_notification(d["original"]))
         self.assertEqual(d["date"], (START + timedelta(days=5)).isoformat())
+        self.assertIn("summary", d["explained"])
+        self.assertTrue(set(d["explained"]) <= {"summary", "today"})
 
     def test_first_cycle_no_repeats(self):
         seen = [(self.day(k)["book"], self.day(k)["section"]) for k in range(len(self.ids))]
@@ -61,6 +63,9 @@ class BuildTest(unittest.TestCase):
             for key in ("modern", "original", "notification", "notification_original"):
                 self.assertNotIn('"', d[key], (k, key))
                 self.assertNotIn("'", d[key], (k, key))
+            for key, t in d["explained"].items():
+                self.assertNotIn('"', t, (k, key))
+                self.assertNotIn("'", t, (k, key))
 
     def test_utf8_not_escaped(self):
         raw = (self.out / "days" / "2026-11-09.json").read_text(encoding="utf-8")

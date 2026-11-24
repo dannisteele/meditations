@@ -5,7 +5,7 @@ from datetime import date, timedelta
 from pathlib import Path
 
 from medit.notify import make_notification
-from medit.parse import load_modern, load_passages
+from medit.parse import load_explained, load_modern, load_passages
 from medit.schedule import order_for_cycle
 from medit.typography import smarten
 
@@ -17,6 +17,7 @@ HORIZON_DAYS = 3653
 def build(out_dir: Path, start: date, days: int) -> int:
     passages = {p["id"]: p for p in load_passages()}
     modern = load_modern()
+    explained = load_explained()
     ids = list(passages)
     day_dir = Path(out_dir) / "days"
     day_dir.mkdir(parents=True, exist_ok=True)
@@ -40,6 +41,7 @@ def build(out_dir: Path, start: date, days: int) -> int:
             "original": original_text,
             "notification": make_notification(modern_text),
             "notification_original": make_notification(original_text),
+            "explained": {k: smarten(v) for k, v in explained[p["id"]].items()},
         }
         (day_dir / f"{d.isoformat()}.json").write_text(
             json.dumps(entry, ensure_ascii=False) + "\n", encoding="utf-8")
